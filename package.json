@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "chrome-cookies-secure": "^1.1.7",
+    "inquirer": "^5.2.0",
     "node-fetch": "^2.1.2"
   },
   "devDependencies": {

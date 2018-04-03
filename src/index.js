@@ -3,6 +3,7 @@ import sevengeeseAPI from './api/index.js';
 import getCookies from './modules/00-get-cookies.js';
 import getUserId from './modules/01-get-user-id.js';
 import getUsersObjectives from './modules/02-get-users-objectives.js';
+import selectObjective from './modules/03-select-objective.js';
 import { reportProgress } from './utils/console-reporter.js';
 
 
@@ -15,11 +16,11 @@ import { reportProgress } from './utils/console-reporter.js';
     const api = sevengeeseAPI(cookies);
     //  Get the user's 7Geese id
     const userId = await getUserId(api);
-
-    //  NEXT STEP: Get a list of the user's objectives
     const objectives = await getUsersObjectives(api)(userId);
+    const { selectedObjective } = await selectObjective(objectives);
 
-    console.log(objectives);
+
+    console.log(selectedObjective);
 
 
 }());
