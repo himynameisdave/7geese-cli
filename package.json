@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Check-in to 7Geese from the command line",
   "scripts": {
-    "build": "rollup -c",
-    "dev": "rollup -c -w",
+    "build": "webpack --config webpack.config.js --mode production ",
+    "dev": "webpack --config webpack.config.js",
     "postinstall": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,15 +14,16 @@
     "7geese": "bin/7geese",
     "7g": "bin/7geese"
   },
+  "dependencies": {
+    "chrome-cookies-secure": "^1.1.7"
+  },
   "devDependencies": {
     "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
-    "rollup": "^0.57.1",
-    "rollup-plugin-babel": "^3.0.3",
-    "rollup-plugin-commonjs": "^9.1.0",
-    "rollup-plugin-node-resolve": "^3.3.0",
-    "rollup-plugin-uglify": "^3.0.0"
+    "webpack": "^4.4.1",
+    "webpack-cli": "^2.0.13"
   },
   "keywords": [
     "CLI",
