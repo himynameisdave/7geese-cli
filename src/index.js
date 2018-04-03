@@ -1,6 +1,8 @@
 import 'babel-polyfill';
 import sevengeeseAPI from './api/index.js';
 import getCookies from './modules/00-get-cookies.js';
+import getUserId from './modules/01-get-user-id.js';
+import getUsersObjectives from './modules/02-get-users-objectives.js';
 import { reportProgress } from './utils/console-reporter.js';
 
 
@@ -8,15 +10,16 @@ import { reportProgress } from './utils/console-reporter.js';
     //  Display intro banner
     reportProgress();
     //  Grab 7G cookies, which includes the token
+    //  TODO: try/catch to check if logged into 7Geese
     const cookies = await getCookies();
     const api = sevengeeseAPI(cookies);
     //  Get the user's 7Geese id
-    const userId = await api.getUserId();
+    const userId = await getUserId(api);
 
     //  NEXT STEP: Get a list of the user's objectives
+    const objectives = await getUsersObjectives(api)(userId);
 
-
-    console.log(userId);
+    console.log(objectives);
 
 
 }());

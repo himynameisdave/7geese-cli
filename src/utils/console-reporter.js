@@ -1,29 +1,17 @@
-//  This can be broken off:
-const banner = `
-███████╗ ██████╗ ███████╗███████╗███████╗███████╗
-╚════██║██╔════╝ ██╔════╝██╔════╝██╔════╝██╔════╝
-    ██╔╝██║  ███╗█████╗  █████╗  ███████╗█████╗
-   ██╔╝ ██║   ██║██╔══╝  ██╔══╝  ╚════██║██╔══╝
-   ██║  ╚██████╔╝███████╗███████╗███████║███████╗
-   ╚═╝   ╚═════╝ ╚══════╝╚══════╝╚══════╝╚══════╝
-
-                Welcome to 7Geese!
-        Let's check into your objectives!
-`;
-
+import banner from './banner.js';
 
 const consoleReporter = function* () {
     const stage = {
-        banner,
         cookie: `🍪 Grabbing 7Geese token from browser cookies...`,
         id: `👤 Getting your user id from 7Geese...`,
-        // comments: `🗣️ Tell me about your progress bro...`,
+        objectives: `🎯 Grabbing your open objectives...`,
         // construct: `📝 Constructing your check-in...`,
         // posting: `🚀 Posting your check-in...`,
     };
-    yield stage.banner;
+    yield banner;
     yield stage.cookie;
     yield stage.id;
+    yield stage.objectives;
 }
 
 const reporter = consoleReporter();
