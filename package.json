@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Check-in to 7Geese from the command line",
   "scripts": {
-    "build": "webpack --config webpack.config.js --mode production ",
-    "dev": "webpack --config webpack.config.js",
+    "build": "webpack --config webpack.config.js --mode production",
+    "dev": "webpack --config webpack.config.js --watch --mode development",
     "lint": "eslint src/ --fix",
     "postinstall": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,7 +16,8 @@
     "7g": "bin/7geese"
   },
   "dependencies": {
-    "chrome-cookies-secure": "^1.1.7"
+    "chrome-cookies-secure": "^1.1.7",
+    "node-fetch": "^2.1.2"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
