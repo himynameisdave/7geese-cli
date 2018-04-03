@@ -5,6 +5,7 @@
   "scripts": {
     "build": "webpack --config webpack.config.js --mode production ",
     "dev": "webpack --config webpack.config.js",
+    "lint": "eslint src/ --fix",
     "postinstall": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,9 +20,14 @@
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
+    "babel-eslint": "^8.2.2",
     "babel-loader": "^7.1.4",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
+    "eslint": "^4.19.1",
+    "eslint-config-himynameisdave": "^0.0.3",
+    "eslint-plugin-filenames": "^1.2.0",
+    "eslint-plugin-import": "^2.10.0",
     "webpack": "^4.4.1",
     "webpack-cli": "^2.0.13"
   },
