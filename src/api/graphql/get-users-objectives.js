@@ -9,6 +9,9 @@ export default `
                             edges {
                                 node {
                                     name
+                                    targetValue
+                                    currentValue
+                                    measurementType
                                 }
                             }
                         }
