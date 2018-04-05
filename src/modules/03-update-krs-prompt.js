@@ -55,7 +55,6 @@ const makeKrPrompt = kr => {
 };
 
 export default krs => {
-    reportProgress();
     //  TODO: flatten these elsewhere....
     const flattenedKrs = krs.edges.map(({ node }) => ({
         ...node,

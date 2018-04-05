@@ -1,6 +1,10 @@
 import request from './request.js';
 import getUsersObjectivesQuery from './graphql/get-users-objectives.js';
-import { SG_ENDPOINT_ME, SG_ENDPOINT_GRAPHQL } from '../constants.js';
+import {
+    SG_ENDPOINT_ME,
+    SG_ENDPOINT_GRAPHQL,
+    SG_ENDPOINT_CHECKIN,
+} from '../constants.js';
 
 
 export default cookie => {
@@ -12,8 +16,6 @@ export default cookie => {
             query: getUsersObjectivesQuery,
             variables: { userId },
         }).then(({ data }) => data.user.objectives.edges.map(({ node }) => node)),
-        checkin: () => {
-            //  ...coming soon!
-        },
+        checkin: checkin => post(SG_ENDPOINT_CHECKIN, checkin),
     };
 };

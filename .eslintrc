@@ -1,3 +1,7 @@
 {
-    "extends": "himynameisdave/configurations/babel-node"
+    "extends": "himynameisdave/configurations/babel-node",
+    "rules": {
+        "no-magic-numbers": 0,
+        "no-warning-comments": 0
+    }
 }
