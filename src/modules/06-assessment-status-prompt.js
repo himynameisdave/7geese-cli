@@ -4,7 +4,7 @@ import { ASSESSMENT_STATUS } from '../constants.js';
 
 export default () => prompt([{
     type: 'list',
-    name: 'assessment',
+    name: 'assessmentStatus',
     message: 'What is the status of this objective?',
     choices: [
         {
