@@ -6,6 +6,7 @@ import getUsersObjectives from './modules/02-get-users-objectives.js';
 import selectObjective from './modules/03-select-objective.js';
 import checkinMessagePrompt from './modules/04-checkin-message-prompt.js';
 import updateKrsPrompt from './modules/05-update-krs-prompt.js';
+import assessmentStatusPrompt from './modules/06-assessment-status-prompt.js';
 import { reportProgress } from './utils/console-reporter.js';
 
 
@@ -20,12 +21,11 @@ import { reportProgress } from './utils/console-reporter.js';
     const userId = await getUserId(api);
     const objectives = await getUsersObjectives(api)(userId);
     const { selectedObjective } = await selectObjective(objectives);
+    const { message } = await checkinMessagePrompt();
+    //  TODO: there needs to be a prompt before this...
     const updatedKrValues = await updateKrsPrompt(selectedObjective.krs);
-    //  TODO: not sure if I want this to come after the KRs prompts
-    // const { message } = await checkinMessagePrompt();
+    const assessmentStatus = await assessmentStatusPrompt();
 
     // console.log(selectedObjective.krs);
-    console.log(updatedKrValues);
-
-
+    // console.log(assessmentStatus);
 }());

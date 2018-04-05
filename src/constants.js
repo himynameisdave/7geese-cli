@@ -3,7 +3,6 @@
 //  For prod, use this one
 export const SG_BASE_URL = 'https://app.7geese.com';
 
-
 export const SG_ENDPOINT_ME = '/api/v/2.0/userprofiles/me/';
 export const SG_ENDPOINT_GRAPHQL = '/graphql';
 
@@ -30,4 +29,10 @@ export const KR_TYPE = {
         19, // rupiah
         20, // columbian peso
     ],
+};
+
+export const ASSESSMENT_STATUS = {
+    NONE: null,
+    ON_TRACK: 1,
+    OFF_TRACK: 2,
 };
