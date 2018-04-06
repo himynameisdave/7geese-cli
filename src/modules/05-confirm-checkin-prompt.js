@@ -8,7 +8,7 @@ export default (message, updatedKrs, assessmentStatus) => {
 
     return prompt([{
         type: 'confirm',
-        name: 'shouldPost',
+        name: 'shouldPostCheckin',
         message: '☝️ Does your check-in look correct?',
     }]);
 };

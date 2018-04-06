@@ -14,7 +14,7 @@ import { reportProgress } from './utils/console-reporter.js';
     reportProgress();
 
     //  TODO: try/catch to check if actually logged into 7Geese
-    // const cookies = await getCookies();
+    const cookies = await getCookies();
     const api = sevengeeseAPI(cookies);
     const userId = await api.getUserId();
 
@@ -25,8 +25,36 @@ import { reportProgress } from './utils/console-reporter.js';
 
     reportProgress();
     const updatedKrValues = await updateKrsPrompt(selectedObjective.krs);
+    const krs = selectedObjective.krs.map(kr => ({
+        ...kr,
+        currentValue: updatedKrValues[`${kr.pk}`], //  string coersion: It's because the keys are strings.
+    }));
     const { assessmentStatus } = await assessmentStatusPrompt();
-    const { shouldPost } = await confirmCheckinPrompt(message, updatedKrValues, assessmentStatus);
 
+    reportProgress();
+    const { shouldPostCheckin } = await confirmCheckinPrompt(message, krs, assessmentStatus);
+
+    if (shouldPostCheckin) {
+        reportProgress();
+        const postResponse = await api.checkin({
+            objective: selectedObjective.url,
+            message,
+            assessment_status: assessmentStatus,
+            key_results: krs.map(({ pk, name, url, ...kr }) => ({
+                id: pk,
+                name,
+                url: url,
+                key_result: url,
+                current_value: kr.currentValue,
+                starting_value: kr.startingValue,
+                target_value: kr.targetValue,
+                measurement_type: kr.measurementType,
+            })),
+            //  TODO: later we should prompt for if they are trying to close the objective
+            close_objective: false,
+            final_assessment: false,
+        });
+        console.log(postResponse);
+    }
 
 }());

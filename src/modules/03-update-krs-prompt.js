@@ -35,15 +35,18 @@ const makeKrPrompt = kr => {
     }
     return {
         type,
-        name: kr.name,
+        name: kr.pk,
         message: `${kr.name}\nThis is KR is currently ${progress}.\n${kr.enterText}`,
         default: (isBinaryKr(kr) && kr.currentValue === 1) ? false : null,
         validate: value => {
             if (isBinaryKr(kr)) return true;
-            const parsedValue = parseInt(parsedValue);
+            const parsedValue = parseInt(value);
+            if (isNaN(parsedValue)) {
+                return 'Please enter a valid number for this KR';
+            }
             //  Check that percentage measurementTypes actually are what they say
             if (isPercentageKr(kr) && parsedValue > 100) {
-                return 'The maximum value for this KR is 100';
+                return 'The maximum value for this KR is 100%';
             }
             return true;
         },
@@ -54,11 +57,11 @@ const makeKrPrompt = kr => {
     };
 };
 
-export default krs => {
-    //  TODO: flatten these elsewhere....
-    const flattenedKrs = krs.edges.map(({ node }) => ({
-        ...node,
-        ...getProgressWords(node),
-    })).filter(filterCompletedBinaryKrs);
-    return prompt(flattenedKrs.map(makeKrPrompt));
-};
+export default krs => prompt(
+    krs.map(kr=> ({
+        ...kr,
+        ...getProgressWords(kr),
+    }))
+    .filter(filterCompletedBinaryKrs)
+    .map(makeKrPrompt)
+);
