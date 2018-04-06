@@ -64,4 +64,7 @@ export default krs => prompt(
     }))
     .filter(filterCompletedBinaryKrs)
     .map(makeKrPrompt)
-);
+).then(updatedKrs => krs.map(kr => ({
+    ...kr,
+    currentValue: updatedKrs[`${kr.pk}`], //  string coersion: It's because the keys are strings.
+})));

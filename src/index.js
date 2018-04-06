@@ -6,6 +6,7 @@ import checkinMessagePrompt from './modules/02-checkin-message-prompt.js';
 import updateKrsPrompt from './modules/03-update-krs-prompt.js';
 import assessmentStatusPrompt from './modules/04-assessment-status-prompt.js';
 import confirmCheckinPrompt from './modules/05-confirm-checkin-prompt.js';
+import constructCheckin from './modules/06-construct-checkin.js';
 import { reportProgress } from './utils/console-reporter.js';
 
 
@@ -24,11 +25,7 @@ import { reportProgress } from './utils/console-reporter.js';
     const { message } = await checkinMessagePrompt();
 
     reportProgress();
-    const updatedKrValues = await updateKrsPrompt(selectedObjective.krs);
-    const krs = selectedObjective.krs.map(kr => ({
-        ...kr,
-        currentValue: updatedKrValues[`${kr.pk}`], //  string coersion: It's because the keys are strings.
-    }));
+    const krs = await updateKrsPrompt(selectedObjective.krs);
     const { assessmentStatus } = await assessmentStatusPrompt();
 
     reportProgress();
@@ -36,25 +33,12 @@ import { reportProgress } from './utils/console-reporter.js';
 
     if (shouldPostCheckin) {
         reportProgress();
-        const postResponse = await api.checkin({
-            objective: selectedObjective.url,
-            message,
-            assessment_status: assessmentStatus,
-            key_results: krs.map(({ pk, name, url, ...kr }) => ({
-                id: pk,
-                name,
-                url: url,
-                key_result: url,
-                current_value: kr.currentValue,
-                starting_value: kr.startingValue,
-                target_value: kr.targetValue,
-                measurement_type: kr.measurementType,
-            })),
-            //  TODO: later we should prompt for if they are trying to close the objective
-            close_objective: false,
-            final_assessment: false,
-        });
-        console.log(postResponse);
+        await api.checkin(
+            constructCheckin(message, selectedObjective.url, assessmentStatus, krs)
+        );
+    } else {
+        console.log(`\n🙅 Okay, I won't post that check-in`); // eslint-disable-line no-console
     }
+    console.log('\n👋 Byeeeeeeeeeee'); // eslint-disable-line no-console
 
 }());
