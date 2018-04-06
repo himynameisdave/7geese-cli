@@ -1,4 +1,5 @@
 import 'babel-polyfill';
+import opn from 'opn';
 import sevengeeseAPI from './api/index.js';
 import getCookies from './modules/00-get-cookies.js';
 import selectObjective from './modules/01-select-objective.js';
@@ -14,31 +15,41 @@ import { reportProgress } from './utils/console-reporter.js';
     //  Display intro banner
     reportProgress();
 
-    //  TODO: try/catch to check if actually logged into 7Geese
-    const cookies = await getCookies();
-    const api = sevengeeseAPI(cookies);
-    const userId = await api.getUserId();
+    try {
+        //  TODO: try/catch to check if actually logged into 7Geese
+        const cookies = await getCookies();
+        const api = sevengeeseAPI(cookies);
+        const userId = await api.getUserId();
 
-    reportProgress();
-    const objectives = await api.getUsersObjectives(userId);
-    const { selectedObjective } = await selectObjective(objectives);
-    const { message } = await checkinMessagePrompt();
-
-    reportProgress();
-    const krs = await updateKrsPrompt(selectedObjective.krs);
-    const { assessmentStatus } = await assessmentStatusPrompt();
-
-    reportProgress();
-    const { shouldPostCheckin } = await confirmCheckinPrompt(message, krs, assessmentStatus);
-
-    if (shouldPostCheckin) {
         reportProgress();
-        await api.checkin(
-            constructCheckin(message, selectedObjective.url, assessmentStatus, krs)
-        );
-    } else {
-        console.log(`\n🙅 Okay, I won't post that check-in`); // eslint-disable-line no-console
+        const objectives = await api.getUsersObjectives(userId);
+        const { selectedObjective } = await selectObjective(objectives);
+        const { message } = await checkinMessagePrompt();
+
+        reportProgress();
+        const krs = await updateKrsPrompt(selectedObjective.krs);
+        const { assessmentStatus } = await assessmentStatusPrompt();
+
+        reportProgress();
+        const { shouldPostCheckin } = await confirmCheckinPrompt(selectedObjective, message, krs, assessmentStatus);
+
+        if (shouldPostCheckin) {
+            reportProgress();
+            await api.checkin(
+                constructCheckin(message, selectedObjective.url, assessmentStatus, krs)
+            );
+            //  Open in browser
+            opn(selectedObjective.openUrl, {
+                app: 'google chrome', // TODO: find the default browser
+            });
+        } else {
+            console.log(`🙅 Okay, I won't post that check-in.`); // eslint-disable-line no-console
+        }
+        //  Byeeeee!
+        console.log(`👋 Byeeeeeeeeeee!`); // eslint-disable-line no-console
+        process.exit(0);
+    } catch (e) {
+        console.log(e, '\nSomething has gone horribly wrong! Burn your machine and exit the building!');
     }
-    console.log('\n👋 Byeeeeeeeeeee'); // eslint-disable-line no-console
 
 }());

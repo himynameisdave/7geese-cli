@@ -3,7 +3,7 @@ const constructKrs = krs => krs.map(({ pk, name, url, ...kr }) => ({
     name,
     url: url,
     key_result: url,
-    current_value: kr.currentValue,
+    current_value: kr.updatedValue,
     starting_value: kr.startingValue,
     target_value: kr.targetValue,
     measurement_type: kr.measurementType,

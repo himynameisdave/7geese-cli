@@ -1,5 +1,5 @@
 import { prompt } from 'inquirer';
-
+import { SG_BASE_URL } from '../constants.js';
 
 export default objectives => prompt([{
     type: 'list',
@@ -10,6 +10,7 @@ export default objectives => prompt([{
         const objective = objectives.find(({ name }) => selected === name);
         return {
             ...objective,
+            openUrl: `${SG_BASE_URL}/objective/${objective.pk}`,
             krs: objective.krs.edges.map(({ node }) => ({ ...node })),
         };
     },

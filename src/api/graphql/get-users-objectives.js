@@ -4,6 +4,7 @@ export default `
             objectives: ownedObjectives(first: 50, closed: false) {
                 edges {
                     node {
+                        pk
                         url
                         name
                         krs: keyResults(first: 50) {

@@ -1,4 +1,6 @@
-export default `
+import chalk from 'chalk';
+
+export default chalk.blue(`
 ███████╗ ██████╗ ███████╗███████╗███████╗███████╗
 ╚════██║██╔════╝ ██╔════╝██╔════╝██╔════╝██╔════╝
     ██╔╝██║  ███╗█████╗  █████╗  ███████╗█████╗
@@ -7,5 +9,5 @@ export default `
    ╚═╝   ╚═════╝ ╚══════╝╚══════╝╚══════╝╚══════╝
 
                 Welcome to 7Geese!
-        Let's check into your objectives!
-`;
+`) + chalk.green(`        Let's check into your objectives!
+`);

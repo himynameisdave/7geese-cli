@@ -1,21 +1,21 @@
 import { prompt } from 'inquirer';
 import { KR_TYPE } from '../constants.js';
 import { reportProgress } from '../utils/console-reporter.js';
+import calculatePercentageProgress from '../utils/calculate-progress-percentage.js';
+import {
+    isBinaryKr,
+    isPercentageKr,
+    isNumericKr,
+    isMoneyKr,
+} from '../utils/kr-types.js';
 
 
-const isBinaryKr = kr => kr.measurementType === KR_TYPE.BINARY;
-const isPercentageKr = kr => kr.measurementType === KR_TYPE.PERCENTAGE;
-const isNumericKr = kr => kr.measurementType === KR_TYPE.NUMERIC;
-const isMoneyKr = kr => KR_TYPE.MONEY.includes(kr.measurementType);
-
-//  TODO: break off into a utils module somewhere
-const calculatePercentageProgress = kr => Math.round((kr.currentValue / kr.targetValue) * 100);
 const getProgressPercentText = (kr, percentageProgress) => {
     if (!isBinaryKr(kr)) return `${percentageProgress}%`;
     return percentageProgress === 0 ? 'incomplete' : 'complete';
 };
 const getProgressWords = kr => {
-    const percentageProgress = calculatePercentageProgress(kr);
+    const percentageProgress = calculatePercentageProgress(kr.currentValue, kr.targetValue);
     return {
         percentageProgress,
         progressPercentText: getProgressPercentText(kr, percentageProgress),
@@ -25,7 +25,6 @@ const getProgressWords = kr => {
 const filterCompletedBinaryKrs = kr => !isBinaryKr(kr) ? true : kr.percentageProgress < 100;
 
 const makeKrPrompt = kr => {
-    // console.log(kr);
     const type = isBinaryKr(kr) ? 'confirm' : 'input';
     let progress = '';
     if (isBinaryKr(kr)) {
@@ -57,14 +56,21 @@ const makeKrPrompt = kr => {
     };
 };
 
-export default krs => prompt(
-    krs.map(kr=> ({
+export default krs => {
+    const updatedKrs = krs.map(kr=> ({
         ...kr,
         ...getProgressWords(kr),
+    }));
+    return prompt(
+        updatedKrs
+            // .filter(filterCompletedBinaryKrs) // turning this off for the time being...
+            .map(makeKrPrompt)
+    ).then(updatedKrValues => updatedKrs.map(kr => {
+        const updatedValue = updatedKrValues[`${kr.pk}`]; //  string coersion: It's because the keys are strings.
+        return {
+            ...kr,
+            updatedValue,
+            updatedPercentageProgress: calculatePercentageProgress(updatedValue, kr.targetValue),
+        };
     }))
-    .filter(filterCompletedBinaryKrs)
-    .map(makeKrPrompt)
-).then(updatedKrs => krs.map(kr => ({
-    ...kr,
-    currentValue: updatedKrs[`${kr.pk}`], //  string coersion: It's because the keys are strings.
-})));
+};
